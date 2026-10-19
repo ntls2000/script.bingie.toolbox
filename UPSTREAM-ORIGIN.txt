@@ -1,0 +1,4 @@
+Upstream: https://raw.githubusercontent.com/matke-84/repository.bingie/main/omega/script.bingie.toolbox/script.bingie.toolbox-1.0.0.zip
+Original version: 1.0.0
+SHA256 of upstream ZIP: 1359de3ffa7868b2348689d0fc07697316c4b6aad8139d1e2443eee87d0398cf
+Source files are included for independent editing. Preserve authorship and license notices.
