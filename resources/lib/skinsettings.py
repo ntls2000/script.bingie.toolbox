@@ -44,7 +44,7 @@ class SkinSettings:
                             "special://skin/",
                             try_decode(
                                 resolution.attrib.get("folder")),
-                            "script-bingie_toolbox-includes.xml").encode("utf-8"))
+                            "script-bingie_toolbox-includes.xml"))
                     tree = xmltree.ElementTree(xmltree.Element("includes"))
                     root = tree.getroot()
                     if constants:
@@ -65,7 +65,7 @@ class SkinSettings:
                                 child2 = xmltree.SubElement(child, "value")
                                 child2.text = value
                     self.indent_xml(tree.getroot())
-                    xmlstring = xmltree.tostring(tree.getroot())
+                    xmlstring = xmltree.tostring(tree.getroot(), encoding="unicode")
                     fileobj = xbmcvfs.File(includes_file, 'w')
                     fileobj.write(xmlstring)
                     fileobj.close()
@@ -76,7 +76,7 @@ class SkinSettings:
         '''gets a list of all skin constants as set in the special xml file'''
         all_constants = {}
         all_variables = {}
-        addonpath = xbmcvfs.translatePath(os.path.join("special://skin/", 'addon.xml').encode("utf-8"))
+        addonpath = xbmcvfs.translatePath(os.path.join("special://skin/", 'addon.xml'))
 
         addon = xmltree.parse(addonpath)
         extensionpoints = addon.findall("extension")
@@ -86,11 +86,11 @@ class SkinSettings:
                 for resolution in resolutions:
                     if sys.version_info.major == 3:
                         includes_file = try_decode(xbmcvfs.translatePath(
-                            try_encode(os.path.join(
+                            os.path.join(
                                 "special://skin/",
                                 try_decode(
                                     resolution.attrib.get("folder")),
-                                "script-bingie_toolbox-includes.xml"))))
+                                "script-bingie_toolbox-includes.xml")))
 
                     if xbmcvfs.exists(includes_file):
                         doc = parse(includes_file)
@@ -392,10 +392,10 @@ class SkinSettings:
     def set_skinshortcuts_property(self, setting="", window_header="", property_name=""):
         '''allows the user to make a setting for skinshortcuts using the special skinsettings dialogs'''
         cur_value = xbmc.getInfoLabel(
-            "$INFO[Container(211).ListItem.Property(%s)]" %
+            "Container(211).ListItem.Property(%s)" %
             property_name)
         cur_value_label = xbmc.getInfoLabel(
-            "$INFO[Container(211).ListItem.Property(%s.name)]" %
+            "Container(211).ListItem.Property(%s.name)" %
             property_name)
         if setting == "||IMAGE||":
             # select image
