@@ -1,0 +1,39 @@
+name: Kodi 22 Python and manifest checks
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Kodi 22 Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.14'
+      - name: Validate Python syntax and Kodi manifest
+        run: |
+          python - <<'PY'
+          import ast
+          from pathlib import Path
+          import xml.etree.ElementTree as ET
+
+          root = Path.cwd()
+          addon = ET.parse(root / 'addon.xml').getroot()
+          assert addon.get('id') == 'script.bingie.toolbox'
+          assert addon.get('version')
+          files = sorted(root.rglob('*.py'))
+          assert files, 'No Python code found'
+          for file in files:
+              if '.github' in file.parts:
+                  continue
+              content = file.read_text(encoding='utf-8-sig')
+              ast.parse(content, filename=str(file), feature_version=None)
+          for file in root.rglob('*.xml'):
+              ET.parse(file)
+          print(f'OK: script.bingie.toolbox '+str(len(files))+' Python files parse under Python 3.14; XML valid')
+          PY
